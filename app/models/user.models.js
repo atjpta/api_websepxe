@@ -15,11 +15,11 @@ const schema = mongoose.Schema(
         },
         xe: {
             type: String,
-            default: false,
+            default: 2,
         },
         taylai: {
             type: String,
-            default: false,
+            default: 2,
         },
         team: {
             type: mongoose.Schema.Types.ObjectId,
@@ -34,6 +34,9 @@ const schema = mongoose.Schema(
             ref: "time"
         },
     },
+    {
+        timestamps: true,
+    }
 );
 
 schema.method('toJSON', function () {

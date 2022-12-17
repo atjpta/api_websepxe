@@ -14,6 +14,12 @@ module.exports = (app) => {
         .put(users.update)
         .delete(users.delete)
     
+    router.route("/:page")
+        .get(users.get6Users)
+    
+    router.route("/max/page")
+        .get(users.getMaxPage)
+    
     router.route("/deletefollow/:id")
         .put(users.removeFollow)
     

@@ -12,16 +12,49 @@ exports.getAllUsersByTeam = async (req, res, next) => {
     }
 };
 
-exports.createUser = async (req, res, next) => {
-    const user = new User({
-        name: req.body.name,
-    })
+exports.getMaxPage = async (req, res, next) => {
     try {
-        const document = user.save();
-        return res.status(200).json({ Message: 'thêm thành công' + user.name})
+        const users = await User.find()
+        return res.json((users.length / 6 - 1).toFixed() );
     } catch (ex) {
         return next(
             res.status(500).json({ Message: 'không  thể  lấy getAllUsersByTeam' })
+        )
+    }
+};
+
+exports.get6Users = async (req, res, next) => {
+    const {page} = req.params
+    try {
+        const users = await User.find()
+            .populate({
+                path: 'want follow team time_di time_ve',
+                select: 'name',
+            })
+            .skip(page * 6)
+            .limit(6)
+            .sort({ 'createdAt': -1 })
+    
+        return res.json(users);
+    } catch (ex) {
+        return next(
+            res.status(500).json({ Message: 'không  thể  lấy getAllUsersByTeam' })
+        )
+    }
+};
+
+exports.createUser = async (req, res, next) => {
+    const user = new User({
+        name: req.body.name,
+        team: req.body.team,
+    })
+    console.log(user);
+    try {
+        const document = user.save();
+        return res.status(200).json({ Message: 'thêm thành công' + user.team + "-------" + user.name })
+    } catch (ex) {
+        return next(
+            res.status(500).json({ Message: 'không  thể  tạo user' })
         )
     }
 
